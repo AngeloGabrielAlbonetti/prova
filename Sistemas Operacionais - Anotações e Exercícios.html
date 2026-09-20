@@ -1,0 +1,2496 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistemas Operacionais — Anotações e Exercícios Resolvidos</title>
+<style>
+  :root {
+    --bg: #fbfaf7;
+    --panel: #ffffff;
+    --ink: #23262b;
+    --ink-soft: #565c66;
+    --line: #e4e1d8;
+    --accent: #2f5d50;
+    --accent-soft: #e7efec;
+    --amber: #a6712b;
+    --mono: 'JetBrains Mono', 'Fira Code', ui-monospace, Menlo, Consolas, monospace;
+    --serif: 'Source Serif 4', 'Georgia', serif;
+    --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.65;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 280px minmax(0,1fr);
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  nav.toc {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 2rem 1.25rem 2rem 1.75rem;
+    border-right: 1px solid var(--line);
+    font-size: 0.86rem;
+  }
+  nav.toc .brand {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    color: var(--accent);
+    margin-bottom: 0.25rem;
+  }
+  nav.toc .brand-sub {
+    color: var(--ink-soft);
+    font-size: 0.78rem;
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+  nav.toc a {
+    display: block;
+    color: var(--ink-soft);
+    text-decoration: none;
+    padding: 0.3rem 0;
+    border-left: 2px solid transparent;
+    padding-left: 0.75rem;
+    margin-left: -0.75rem;
+  }
+  nav.toc a:hover, nav.toc a:focus-visible {
+    color: var(--accent);
+    border-left-color: var(--accent);
+  }
+  nav.toc .group-title {
+    font-weight: 600;
+    color: var(--ink);
+    margin-top: 1.1rem;
+    font-size: 0.82rem;
+  }
+  main {
+    padding: 3rem 3.5rem 6rem;
+    min-width: 0;
+  }
+  header.page-head {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--line);
+  }
+  header.page-head h1 {
+    font-family: var(--serif);
+    font-size: 2.4rem;
+    margin: 0 0 0.6rem;
+    color: var(--ink);
+  }
+  header.page-head p {
+    color: var(--ink-soft);
+    margin: 0.15rem 0;
+    font-size: 0.95rem;
+  }
+  h2 {
+    font-family: var(--serif);
+    font-size: 1.7rem;
+    color: var(--accent);
+    margin-top: 3.2rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--line);
+  }
+  main > h2:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
+  h3 {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    color: var(--ink);
+    margin-top: 2.2rem;
+    margin-bottom: 0.8rem;
+  }
+  h4 {
+    font-size: 1.02rem;
+    color: var(--accent);
+    margin-top: 1.6rem;
+    margin-bottom: 0.5rem;
+  }
+  p { max-width: 74ch; }
+  blockquote {
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    padding: 0.8rem 1rem;
+    margin: 1rem 0;
+    border-radius: 0 6px 6px 0;
+    max-width: 68ch;
+  }
+  blockquote p { margin: 0; }
+  code {
+    font-family: var(--mono);
+    background: var(--accent-soft);
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+    font-size: 0.9em;
+  }
+  pre {
+    background: #1e2523;
+    color: #e7efec;
+    padding: 1.1rem 1.3rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 0.85rem;
+    max-width: 74ch;
+  }
+  pre code { background: none; padding: 0; color: inherit; }
+  table {
+    border-collapse: collapse;
+    margin: 1rem 0 1.6rem;
+    font-size: 0.92rem;
+    background: var(--panel);
+  }
+  th, td {
+    border: 1px solid var(--line);
+    padding: 0.4rem 0.7rem;
+    text-align: center;
+  }
+  thead th, tr:first-child th {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  td:first-child, th:first-child { text-align: left; }
+  a { color: var(--accent); }
+  ::selection { background: #cfe3dc; }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    nav.toc { position: static; height: auto; border-right: none; border-bottom: 1px solid var(--line); }
+    main { padding: 2rem 1.25rem 4rem; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav class="toc">
+    <span class="brand">Sistemas Operacionais</span>
+    <span class="brand-sub">Anotações &amp; exercícios resolvidos</span>
+    <a href="#intro">Informações do curso</a>
+    <div class="group-title">Anotações de aula</div>
+    <a href="#aula-1">Aula 1</a>
+    <a href="#aula-2">Aula 2</a>
+    <a href="#aula-3">Aula 3</a>
+    <a href="#aula-4">Aula 4</a>
+    <a href="#aula-5">Aula 5</a>
+    <a href="#aula-6">Aula 6</a>
+    <a href="#aula-7">Aula 7 — Deadlocks</a>
+    <a href="#aula-8">Aula 8</a>
+    <a href="#aula-9">Aula 9 — Arquivos</a>
+    <div class="group-title">Exercícios resolvidos</div>
+    <a href="#ex-escalonamento">Algoritmos de escalonamento</a>
+    <a href="#ex-produtor-consumidor">Produtor-consumidor</a>
+    <a href="#ex-deadlock">Deadlock (banqueiro)</a>
+  </nav>
+  <main>
+    <header class="page-head" id="intro">
+      <h1>Sistemas Operacionais</h1>
+      <p><strong>Professor:</strong> Maurílio Campano Jr. — maurilio.campanojr@gmail.com · @prof.mcampanojr</p>
+      <p><strong>Livro:</strong> Sistemas Operacionais Modernos — Tanenbaum (3ª/4ª edição, opcional)</p>
+      <p><strong>Anotações complementares:</strong> <a href="https://dontpad.com/mmcjr2025">dontpad.com/mmcjr2025</a></p>
+      <p style="margin-top:0.8rem;"><em>Trechos marcados como vindos do livro (Tanenbaum) foram conferidos e complementados a partir dos PDFs dos capítulos 1, 2, 4 e 6 enviados.</em></p>
+    </header>
+
+<p><strong>Professor:</strong> Maurílio Campano Jr.
+<strong>Contato:</strong> maurilio.campanojr@gmail.com | maurilio.campano@docentes.unicesumar.edu.br
+<strong>Instagram:</strong> @prof.mcampanojr
+<strong>Anotações complementares (dontpad):</strong> https://dontpad.com/mmcjr2025
+<strong>Livro:</strong> Sistemas Operacionais Modernos — Tanenbaum (3ª/4ª edição, opcional)</p>
+<hr />
+<h2 id="aula-1">Aula 1 — 29/07</h2>
+<h3>O que é um sistema operacional</h3>
+<ul>
+<li>O SO é o intermédio entre o usuário e o hardware.</li>
+<li>O SO organiza a execução dos processos: os processos querem usar recursos de hardware, e é o SO que regula a sequência de processos que serão realizados pelo processador.</li>
+<li>O SO gerencia a memória RAM.</li>
+<li>Principais conceitos que serão vistos ao longo do curso: <strong>processo</strong> e <strong>memória</strong>.</li>
+</ul>
+<h3>Funcionamento do processador</h3>
+<ul>
+<li>O processador trabalha um processo por vez, e não todos ao mesmo tempo — a troca é tão rápida (cerca de 0,00000001s) que parece simultâneo.</li>
+<li>O sistema operacional escolhe qual processo será executado logo após a conclusão do anterior.</li>
+<li>Os processos podem se comunicar entre si e com o SO.</li>
+<li>Se o SO não reconhece um hardware, ele "pede ajuda" ao driver.</li>
+</ul>
+<h3>Hierarquia de memória</h3>
+<pre><code>registrador/registradora (volátil) &lt;---- cache (volátil) &lt;---- RAM (volátil) &lt;---- SSD &lt;---- HD &lt;---- mídias ópticas &lt;---- fita
+</code></pre>
+<ul>
+<li>Quanto mais alto na hierarquia: mais rápido, mais caro e menor capacidade.</li>
+<li>Memórias mais rápidas possuem menor capacidade — é assim que a organização da memória funciona.</li>
+</ul>
+<hr />
+<h2 id="aula-2">Aula 2</h2>
+<h3>Tipos de memória RAM</h3>
+<ul>
+<li>Existem duas memórias RAM: <strong>DRAM</strong> (dinâmica) — a que conhecemos normalmente — e <strong>SRAM</strong>, formada por flip-flops (usada na cache).</li>
+</ul>
+<h3>Componentes do processador</h3>
+<ul>
+<li>Registradores</li>
+<li>Unidade de controle</li>
+<li>Unidade lógica e aritmética (ULA)</li>
+<li>Barramento interno</li>
+</ul>
+<h3>O SO como camada de software</h3>
+<ul>
+<li>O sistema operacional é a primeira camada de software que gerencia todos os processos.</li>
+<li>Interface em alto nível → fácil para o usuário entender.</li>
+<li>Hardware em baixo nível → funcionamento mais interno do computador.</li>
+<li>O SO fica no meio, <strong>intermediando</strong> os dois níveis.</li>
+<li>Os componentes do computador realizam troca de informação constante, que se converte de forma muito mais simplificada para o usuário — esse é o conceito de <strong>máquina estendida</strong>, uma das definições de sistema operacional.</li>
+</ul>
+<h3>SO gerenciando recursos</h3>
+<ul>
+<li>Cada processo é utilizado por uma determinada quantidade de tempo (0,0000000001s) pelo SO e depois "roda a vez" para o próximo.</li>
+<li>Thread: analogia de "vou usar o recurso, mas vou encher duas garrafinhas ao mesmo tempo".</li>
+<li>Por que o computador trava? Porque não conseguiu terminar a tarefa dentro do tempo — ela continuará quando chegar sua vez novamente na fila.</li>
+<li><strong>Multiplexação:</strong> vários programas podem ser executados ao mesmo tempo. O SO gerencia e protege a memória, dispositivos de entrada/saída e outros recursos, e inclui multiplexação de duas formas: no tempo e no espaço.</li>
+</ul>
+<h3>Zoológico de sistemas operacionais</h3>
+<table>
+<thead>
+<tr>
+<th>Tipo</th>
+<th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Computador de grande porte</td>
+<td>Receptor de cabos de comunicação transoceânica</td>
+</tr>
+<tr>
+<td>Servidores</td>
+<td><em>(categoria do livro — Cap. 1; sem exemplo próprio nas anotações de aula)</em></td>
+</tr>
+<tr>
+<td>Multiprocessadores</td>
+<td>SO escolhe mais de um processo para trabalhar simultaneamente, distribuindo o trabalho</td>
+</tr>
+<tr>
+<td>Computadores pessoais</td>
+<td><em>(categoria do livro — Cap. 1; sem exemplo próprio nas anotações de aula)</em></td>
+</tr>
+<tr>
+<td>Portáteis</td>
+<td>Smartwatch</td>
+</tr>
+<tr>
+<td>Embarcado</td>
+<td>Processamento muito limitado (ex.: ar-condicionado, projetor)</td>
+</tr>
+<tr>
+<td>Nós sensores (sensor node)</td>
+<td>Sensores de proximidade</td>
+</tr>
+<tr>
+<td>Tempo real (crítico)</td>
+<td>Sistemas de hospitais ou de aviação</td>
+</tr>
+<tr>
+<td>Cartões inteligentes (smart card)</td>
+<td>Abrir porta de hotel, cartão dos carros da Tesla</td>
+</tr>
+</tbody>
+</table>
+<p><em>As categorias "Servidores" e "Computadores pessoais" fazem parte da lista original do livro (Tanenbaum, Cap. 1) e não estavam nas anotações de aula — incluídas aqui para completar o zoológico.</em></p>
+<h3>Complementos de hardware</h3>
+<ul>
+<li>Flip-flop é uma memória RAM do tipo SRAM; um conjunto de flip-flops forma a memória cache.</li>
+<li>A memória RAM é formada por capacitores.</li>
+<li>Principais componentes do computador: processador (CPU/UCP), memória, dispositivos de entrada e saída, barramento.</li>
+<li>Cada núcleo contém sua própria memória L1 e L2; a L3 é separada do processador.</li>
+<li>O SO gerencia todo o hardware do computador; se não reconhecer algum componente, recorre ao driver.</li>
+<li>O SO é, essencialmente, um <strong>gerenciador de recursos</strong>.</li>
+</ul>
+<h3>Bug do milênio</h3>
+<ul>
+<li>Acreditava-se que, ao virar de 1999 para 2000, os sistemas "bugariam" e voltariam para 1900, fazendo contas bancárias apresentarem erro (saldo positivo indevido em contas negativas, e vice-versa).</li>
+<li>Em 1970, os engenheiros usaram apenas 2 bits para representar o ano e depois precisaram trocar para 4 bits — a troca foi motivada pelo alto custo da memória na época.</li>
+<li>Em 2038 haverá um problema semelhante, mas como a memória é mais barata hoje, a correção será mais fácil.</li>
+</ul>
+<h3>Dispositivos de entrada/saída</h3>
+<ul>
+<li>Quando um dispositivo de entrada/saída é inserido no computador: ele entra no processo, "sai" e não retorna até completar a operação de E/S; enquanto isso, outros processos continuam sendo executados normalmente; ao concluir, volta à fila normal de processos.</li>
+<li>Se outro dispositivo de E/S entrar no sistema, ele forma uma fila para concluir sua operação, tudo isso enquanto os processos seguem sendo executados.</li>
+</ul>
+<hr />
+<h2 id="aula-3">Aula 3</h2>
+<h3>Processos e threads</h3>
+<ul>
+<li>a, b, c representam processos; cada um realiza tarefas em seu respectivo período de tempo (ex.: a de 100–200, b de 200–300, c de 300–400 — usando 1 minuto para cada, só para facilitar a explicação).</li>
+<li>Se um processo não finalizou a tarefa, o sistema sabe onde parou e continuará quando o processo retornar à execução.</li>
+<li><strong>Analogia:</strong> processo = "estou fazendo um bolo"; se o filho é picado por uma abelha, cuido do filho e depois volto para a tarefa, continuando de onde parei.</li>
+<li>Existem tarefas com mais prioridade que outras → conceito de <strong>escalonamento</strong> (troca de processos).</li>
+</ul>
+<h3>Ray casting</h3>
+<ul>
+<li>Técnica de noção de profundidade que altera a altura de paredes/blocos em um mapa 2D conforme a visão do personagem — usada por não haver processamento suficiente na época.</li>
+<li>A mudança de prioridade no gerenciador de arquivos não causa diferença perceptível em jogos online, pois é algo muito rápido.</li>
+</ul>
+<h3>O que causa a criação de um processo</h3>
+<ul>
+<li>Inicialização do sistema.</li>
+<li>Execução de uma chamada de sistema de criação de processo.</li>
+</ul>
+<h3>Hierarquia e estados de processo</h3>
+<ul>
+<li>Ao finalizar a árvore de tarefas, todos os processos abertos por um processo "pai" são finalizados junto com ele.</li>
+<li>Estados possíveis de um processo:</li>
+<li><strong>Em execução</strong> (ex.: Word)</li>
+<li><strong>Pronto</strong> (ex.: PowerPoint, Excel)</li>
+<li><strong>Bloqueado</strong> (aguardando entrada e saída)</li>
+<li>Quando o Word fica pronto, o sistema pega algum processo que está no estado "pronto" para colocar em execução.</li>
+<li>No simulador de sistema operacional, ao dar prioridade a um processo, somente ele será executado — no sistema operacional real isso não acontece.</li>
+<li>Exemplo de bloqueio: o Word está salvando um arquivo no HD → o Word fica bloqueado enquanto ocorre o salvamento (operação de E/S); o sistema executa os outros processos na RAM enquanto isso e, ao terminar, o Word volta para o estado "pronto". Outro exemplo: <code>scanf</code> em C — enquanto o usuário não digita, o processo fica bloqueado (operação de E/S).</li>
+<li>Se dois processos de entrada/saída forem realizados ao mesmo tempo (ex.: instalação), o segundo processo entra em fila atrás do primeiro.</li>
+</ul>
+<p><strong>Transições entre estados (setas):</strong>
+1. Bloqueia o processo de entrada e saída.
+2. Retira o processo do "bloqueado" quando finalizado e o leva para "pronto".
+3. Traz o processo de "execução" para "pronto".
+4. Tira o processo do "pronto" e leva para "em execução".
+- Teoricamente poderia haver mais duas setas, mas não ocorrem na prática hoje em dia:
+  - "Bloqueado" para "execução" — só faria sentido se houvesse um único processo (o computador gastaria processamento à toa enquanto bloqueado).
+  - "Pronto" para "bloqueado" — não pode acontecer.
+- Processo de maior prioridade: exemplo "a reitora apareceu na porta".</p>
+<h3>Eventos que terminam um processo</h3>
+<ul>
+<li>Saída normal (voluntário)</li>
+<li>Saída por erro (voluntário, dá para resolver)</li>
+<li>Erro fatal (involuntário) — ex.: divisão por zero</li>
+<li>
+<p>Cancelamento por outro processo (involuntário) — outro processo cancela</p>
+</li>
+<li>
+<p>Os processos não sabem em qual posição de memória estão armazenados — quem gerencia isso é o SO, para otimizar o uso da memória.</p>
+</li>
+<li>O HD lê os dados um por um (sequencialmente); já na RAM, o tempo de acesso é igual independentemente da posição do dado.</li>
+<li>Um cheat funciona invadindo o espaço de memória de outro processo (burlando o espaço do SO e alterando alguma informação) — o que normalmente não deveria ocorrer.</li>
+</ul>
+<h3>Decisão de escalonamento</h3>
+<ul>
+<li>O sistema operacional precisa decidir qual será o próximo processo a executar (comportamento de escalonamento de processo) — <em>anotação incompleta na fonte original</em>.</li>
+</ul>
+<hr />
+<h2 id="aula-4">Aula 4</h2>
+<h3>Organização do gerenciamento de processos</h3>
+<ul>
+<li>O gerenciamento de processos do SO é feito pelo <strong>escalonador</strong>.</li>
+<li>Campos do SO: gerenciamento de processos, gerenciamento de memória, gerenciamento de arquivos.</li>
+<li>Processos têm índice e número de porta.</li>
+<li>Os processos não sabem em qual intervalo da RAM estão armazenados, apenas quanto de espaço têm disponível — os próprios processos fazem uma requisição de quanta memória precisam.</li>
+</ul>
+<h3>Troca de mensagens entre processos</h3>
+<pre><code>-&gt; comunicação
+send(destination, &amp;message)
+receive(source, &amp;message)
+</code></pre>
+<ul>
+<li>Funciona de forma parecida com o TCP: se a mensagem não chegar a tempo, dá timeout e é enviada novamente.</li>
+<li>Se a confirmação (ACK) se perder, o destinatário deve detectar a duplicata e descartá-la.</li>
+</ul>
+<h3>Objetivos dos algoritmos de escalonamento</h3>
+<p><strong>Todos os sistemas</strong>
+- Justiça — o SO deve dar a todos os processos a chance de utilizar o recurso.
+- Equilíbrio — sempre deve haver algum processo em execução, mantendo uma porção do sistema ocupada.
+- Aplicação da política — verificar se a política estabelecida está sendo cumprida.</p>
+<p><strong>Sistemas em lote</strong>
+- Vazão (throughput) — maximizar o número de tarefas realizadas por hora (unidade de tempo).
+- Tempo de retorno (médio) — deve ser minimizado, entre a submissão e o término.
+- Utilização de CPU — manter a CPU sempre ocupada (não pode ficar parada, pois gasta energia à toa).
+- Descrição: é aquele em que se começa uma tarefa e vai com ela até o final, passando de tarefa em tarefa; a ordem de resolução impacta o resultado — faz-se o processo mais curto (fácil) primeiro, depois os mais longos, para otimizar o tempo total.</p>
+<p><strong>Sistemas interativos</strong>
+- Tempo de resposta curto — responder rapidamente às requisições.
+- Proporcionalidade — satisfazer as expectativas dos usuários.
+- Cada processo recebe um tempo determinado (ex.: 1 minuto); se não terminar, volta para a fila e recebe mais 1 minuto, até concluir.</p>
+<p><strong>Sistemas de tempo real</strong>
+- Cumprimento dos prazos — não pode haver perda de dados.
+- Previsibilidade — evitar a degradação da qualidade em sistemas multimídia; deve-se saber quando os componentes do sistema vão falhar.</p>
+<h3>Escalonamento preemptivo x não preemptivo</h3>
+<ul>
+<li><strong>Preemptivo:</strong> o SO define o tempo máximo (quantum) que cada processo pode usar o processador; ao terminar o tempo, o SO interrompe o processo e passa para o próximo, retomando depois.</li>
+<li><strong>Não preemptivo:</strong> escolhe um processo para executar e o deixa executar até ser bloqueado (entrada/saída) ou até que ele voluntariamente libere a CPU — pode travar o sistema se o processo ocupar a CPU pelo tempo que quiser.</li>
+</ul>
+<hr />
+<h2 id="aula-5">Aula 5</h2>
+<h3>Categorias de algoritmos de escalonamento</h3>
+<ul>
+<li><strong>Em lote</strong> (um processo por vez) — tipos: primeiro a chegar/primeiro a ser servido (FIFO), tarefa mais curta primeiro, prioridades.</li>
+<li><strong>Interativo</strong> (padrão, vai alternando os processos por intervalo de tempo) — <strong>round-robin (circular)</strong>: o processo "gira" por todos os processos; passado o tempo, quando circula de novo, o tempo continua de onde parou. Os valores são contabilizados para a média a partir da conclusão dos processos (quando encontra um zero, contabiliza todo o tempo da média anterior antes do último zero).</li>
+<li>Em um sistema também existe o <strong>tempo de chaveamento</strong> entre processos. Em um chaveamento circular, sempre que um processo realiza o último chaveamento entre o processo 0 e o próximo, exclui-se o chaveamento entre ele e o próximo processo.</li>
+<li>Se o tempo de chaveamento é diminuído, o desempenho do sistema melhora bastante.</li>
+<li>Existe também o <strong>escalonamento por prioridade</strong>.</li>
+</ul>
+<h3>Regra de cálculo (empates)</h3>
+<ul>
+<li>Em caso de empate entre tempo e prioridade, resolve-se pelo <strong>FIFO</strong> (first in first out).</li>
+<li>Regra de cálculo da tabela: o valor acumula somando com a linha de cima. Ex.: se A = 4 e B = 5, no FIFO o resultado final é A = 4 e B = 9.</li>
+</ul>
+<hr />
+<h2 id="aula-6">Aula 6</h2>
+<h3>Threads</h3>
+<ul>
+<li>CUDA é a linguagem de programação da NVIDIA voltada para desenvolvimento paralelo.</li>
+<li>Se o código for sequencial, a quantidade de núcleos interfere na velocidade de leitura/processamento.</li>
+<li>Thread está associada a um processo, utilizando processamento paralelo: divide-se o processo em vários pedaços para ser executado por diferentes núcleos, sem definir um núcleo específico — é possível dividir um processo em quantas partes quiser.</li>
+<li>Threads são mais fáceis de criar e destruir do que processos, pois não possuem recursos próprios associados a elas.</li>
+<li><strong>Por que usar threads?</strong> Muitas aplicações realizam múltiplas atividades ao mesmo tempo, e algumas podem ser bloqueadas periodicamente.</li>
+<li>Exemplo (Word) — 3 threads: uma para interação com o usuário, uma para formatação em segundo plano e uma para salvar o documento em disco.</li>
+<li>Se fossem 3 processos em vez de threads, cada um teria que invadir o espaço de memória do outro para se comunicar (troca de mensagem), o que é mais lento. Com threads, cada uma funciona sem trocar mensagem com o processo principal — mais rápido.</li>
+<li>Se uma thread precisar de mais espaço/memória/recurso, ela avisa o processo, e o processo pede ao SO.</li>
+<li>Threads precisam estar escalonadas para realizar seu processamento.</li>
+</ul>
+<h3>Condição de corrida (race condition)</h3>
+<ul>
+<li>Exemplo: dois processos (A e B) querem imprimir arquivos.</li>
+<li>O spool de impressão contém uma fila para os arquivos a serem impressos.</li>
+<li>As variáveis <strong>in</strong> e <strong>out</strong> indicam, respectivamente, os lugares de entrada e saída no spool.</li>
+<li>Como funciona: o processo quer imprimir um arquivo na RAM → lê o valor de <strong>in</strong> → coloca o nome do arquivo na posição → ao terminar, incrementa <strong>in</strong>.</li>
+<li><strong>Região crítica:</strong> ler in; colocar nome; incrementar in.</li>
+<li><strong>Exclusão mútua:</strong> dois processos não podem estar simultaneamente dentro de suas regiões críticas — só um pode acessar por vez; se isso ocorrer, um processo pode ter seus dados sobrescritos.</li>
+</ul>
+<h3>Condições para evitar condições de corrida (regiões críticas)</h3>
+<ol>
+<li>Dois processos não podem estar simultaneamente dentro de suas regiões críticas — apenas um por vez.</li>
+<li>Nada pode ser afirmado sobre a velocidade ou o número de CPUs.</li>
+<li>Nenhum processo em execução fora de sua região crítica pode bloquear outros processos que queiram acessá-la.</li>
+<li>Nenhum processo deve esperar eternamente para entrar em sua região crítica.</li>
+</ol>
+<h3>Algoritmo de Dekker</h3>
+<ul>
+<li>Mencionado apenas pelo nome nas anotações, sem detalhamento adicional.</li>
+</ul>
+<h3>Recomendação de canal</h3>
+<ul>
+<li>Spanning Tree <em>(anotação isolada na fonte original, sem contexto adicional)</em>.</li>
+</ul>
+<h3>Técnicas de gerenciamento de dados compartilhados</h3>
+<p>Técnicas: desabilitar interrupções; variáveis do tipo trava; chaveamento obrigatório; solução de Peterson; instrução TSL; XCHG.</p>
+<ul>
+<li><strong>Desabilitando interrupções:</strong> o processo em execução nunca é interrompido, mesmo que tenha acabado seu tempo (ex.: 1 minuto). Pode gerar monopólio do processo, e o processo pode não devolver o controle (travar).</li>
+<li><strong>Variáveis do tipo trava:</strong> variável com valor 0 ou 1; sofre do mesmo problema do spool de impressão; é um nível a mais de controle, mas ainda pode causar monopólio.</li>
+<li><strong>Chaveamento obrigatório:</strong> uma vez de cada — cada processo tem sua vez, mesmo que não precise. Viola a terceira condição (um processo pode estar bloqueando quem precisa, mesmo sem estar na região crítica).</li>
+<li><strong>Solução de Peterson:</strong> evolução do algoritmo de Dekker (uma variável controla por vez); encapsula ações em procedimentos: <code>enterRegion();</code> e <code>leaveRegion();</code>.</li>
+<li><strong>Instrução TSL</strong> (Test and Set Lock): similar a variáveis do tipo TRAVA, porém em baixo nível; implementação com um único registrador.</li>
+<li><strong>Instrução XCHG</strong> (Exchange): idêntica em propósito ao TSL, porém usa dois registradores.</li>
+</ul>
+<h3>Problema produtor-consumidor</h3>
+<ul>
+<li>Se o chaveamento ocorrer enquanto um processo está executando, pode chegar um ponto em que ambos os processos "dormem" para sempre.</li>
+<li><strong>Com semáforos:</strong> encapsula-se uma variável na qual se faz um "up" e um "down".</li>
+<li><strong>Com mutexes:</strong> encapsula-se a informação em uma variável na qual se dá "lock" e "unlock".</li>
+</ul>
+<h3>Monitores</h3>
+<ul>
+<li>Passam a tarefa para o compilador — ele implementa certas soluções por conta própria, para não precisarmos fazer isso manualmente.</li>
+</ul>
+<h3>Barreiras</h3>
+<ul>
+<li>Travam o acesso até que todos os processos cheguem, para sincronizar o acesso a recursos.</li>
+</ul>
+<h3>O problema do jantar dos filósofos</h3>
+<ul>
+<li>Filósofo = processo; garfos = recursos compartilhados.</li>
+<li>Os filósofos precisam dos dois garfos para comer; o processo pede o recurso ao SO.</li>
+<li>Cenário: se todos tentam pegar o garfo da direita e depois não conseguem pegar o da esquerda → <strong>deadlock</strong>.</li>
+</ul>
+<h3>O problema dos leitores e escritores</h3>
+<ul>
+<li>Apenas um escritor por vez pode escrever.</li>
+<li>Vários leitores podem ler ao mesmo tempo.</li>
+<li>Enquanto leitores leem, o escritor não escreve; enquanto o escritor escreve, os leitores não leem.</li>
+<li>O escritor espera pelos leitores que já estavam lendo antes dele chegar, mas não espera pelos leitores que chegaram depois dele.</li>
+</ul>
+<hr />
+<h2 id="aula-7">Aula 7 — Capítulo 6: Deadlocks</h2>
+<ul>
+<li>"Tela azul" está associada à exclusão mútua.</li>
+<li>Deadlock geralmente está associado a recursos (HD, SSD, memória, etc.) e ocorre tanto em hardware quanto em software.</li>
+<li>Exemplo: dois processos desejam escanear um documento e gravar em CD — o processo A requisita a impressora e depois o gravador; o processo B requisita o gravador e depois a impressora → deadlock. O mesmo ocorreria se os processos estivessem em rede.</li>
+</ul>
+<h3>Recursos preemptíveis e não preemptíveis</h3>
+<ul>
+<li><strong>Não preemptível:</strong> não pode ser retirado do processo proprietário atual sem causar problema.</li>
+<li><strong>Preemptível:</strong> pode ser retirado do processo proprietário sem prejuízo.</li>
+<li>Deadlock ocorre com recursos <strong>não preemptíveis</strong> — gera um impasse.</li>
+</ul>
+<h3>Definição (do livro)</h3>
+<ul>
+<li>Um conjunto de processos está em situação de impasse (deadlock) se todo processo pertencente ao conjunto estiver esperando por um evento que somente outro processo desse mesmo conjunto poderá fazer acontecer.</li>
+</ul>
+<h3>Condições para deadlocks de recursos</h3>
+<ol>
+<li><strong>Exclusão mútua</strong> — cada recurso só pode estar alocado a um processo por vez (ou está disponível, ou associado a um único processo).</li>
+<li><strong>Posse e espera</strong> — processos que já estão usando um recurso podem requisitar novos recursos (recursos compartilhados).</li>
+<li><strong>Não preempção</strong> — recursos concedidos previamente a um processo não podem ser tomados à força; devem ser explicitamente liberados.</li>
+<li><strong>Espera circular</strong> — deve existir um encadeamento circular de dois ou mais processos, onde cada um espera por um recurso que está sendo usado por outro do mesmo ciclo.</li>
+</ol>
+<h3>Modelagem de deadlocks (grafos)</h3>
+<ul>
+<li>Grafos direcionados: bolinha = processo; quadrado = recurso.</li>
+<li>Seta de processo apontando para recurso = "quero usá-lo"; seta de recurso apontando para processo = "estou sendo usado por esse processo".</li>
+<li>Quando há um ciclo no grafo = deadlock.</li>
+</ul>
+<h3>Estratégias para lidar com deadlock</h3>
+<ol>
+<li><strong>Ignorar o problema</strong> — abordagem mencionada no livro; dá trabalho resolver computacionalmente.</li>
+<li><strong>Detecção e recuperação</strong> — deixa os deadlocks ocorrerem, depois detecta e recupera:</li>
+<li><strong>Recuperação por preempção:</strong> retira provisoriamente um recurso de um processo e o dá a outro.</li>
+<li><strong>Recuperação de retrocesso:</strong> gera checkpoints, salvando em arquivos a imagem da memória e os estados dos recursos, sem sobrepor checkpoints anteriores, formando um log de execução.</li>
+<li><strong>Recuperação por eliminação de processos:</strong> mata o processo — pode causar perda de dados.</li>
+<li><strong>Estados seguros e inseguros</strong> — o SO identifica estados que podem resultar em deadlock (inseguros) e os que não (seguros).</li>
+<li><strong>Ataque às quatro condições:</strong></li>
+<li><strong>Exclusão mútua:</strong> se um recurso puder estar com dois ou mais processos ao mesmo tempo, não há deadlock — mas ocorre caos com o recurso; existe o processo <em>daemon</em>, cuja única função é requisitar um recurso, emprestando-o para os demais e gerenciando a fila.</li>
+<li><strong>Posse e espera:</strong> o processo pede de uma vez tudo que vai precisar de recurso — porém nem todo processo sabe o que vai precisar desde o início.</li>
+<li><strong>Não preempção:</strong> retomar à força um recurso que um processo já está usando (ex.: tirar a impressora de um processo no meio de uma impressão porque ele também precisa de um plotter) é complicado ou impossível na prática; a solução apontada pelo livro (Cap. 6) é a <strong>virtualização dos recursos</strong> <em>(detalhe que não estava nas anotações de aula)</em>.</li>
+<li><strong>Espera circular:</strong> o processo deve fazer requisições seguindo uma ordem determinada — se um processo pediu a impressora, outro processo só pode pedir o CD se tiver um recurso de nível menor (a impressora) primeiro.</li>
+</ol>
+<h3>Condição de inanição (starvation)</h3>
+<ul>
+<li>Analogia registrada nas anotações de aula: todo mundo pega o garfo da direita, olha o da esquerda, não está lá, solta, e repete. Não conseguir fazer a tarefa nessas condições <strong>não é</strong> um deadlock.</li>
+<li><strong>Atenção:</strong> esse exemplo é, na verdade, o problema do jantar dos filósofos (Capítulo 2 do livro, já coberto na Aula 6) — nas anotações de aula ele foi reaproveitado aqui para ilustrar inanição. O Capítulo 6 do livro (Deadlocks) traz um exemplo <em>diferente</em> para "condição de inanição": a alocação de uma impressora entre vários processos. Se o algoritmo sempre prioriza o menor arquivo, e há um fluxo constante de arquivos pequenos chegando, um arquivo grande pode nunca conseguir a impressora — ficando "parado por muito tempo" (inanição). O livro aponta que isso pode ser evitado usando uma política de alocação <strong>FIFO</strong>.</li>
+</ul>
+<hr />
+<h2 id="aula-8">Aula 8</h2>
+<h3>Implementando sockets em C</h3>
+<ul>
+<li><code>send</code> — manda dados de um socket conectado.</li>
+<li><code>recv</code> — recebe dados de um socket conectado.</li>
+</ul>
+<hr />
+<h2 id="aula-9">Aula 9 — Capítulo 4: Sistemas de Arquivos</h2>
+<h3>Conceito</h3>
+<ul>
+<li>Estrutura para organizar o armazenamento de informações a longo prazo.</li>
+<li>Deve permitir armazenar grandes quantidades de informação.</li>
+<li>A informação deve sobreviver ao fim do processo que a criou.</li>
+<li>Múltiplos processos devem ser capazes de acessar a informação simultaneamente.</li>
+</ul>
+<h3>Requisitos</h3>
+<ul>
+<li>Deve ser possível encontrar um arquivo.</li>
+<li>Deve ser possível saber se blocos estão livres (HD, SSD).</li>
+<li>Deve ser possível impedir que um usuário leia dados de outro sem permissão <em>(item confirmado no livro — Cap. 4 — que não estava explícito nas anotações de aula)</em>.</li>
+</ul>
+<h3>Estrutura de arquivos</h3>
+<ul>
+<li>Sequência de bytes.</li>
+<li>Sequência de registros.</li>
+<li>Árvore/grafo — em C, é chamado de <strong>diretório raiz</strong>.</li>
+</ul>
+<h3>Tipos de arquivo / Operações</h3>
+<ul>
+<li>"Tipos de arquivo" e "Operações" apareciam como tópicos no material, sem anotações registradas na fonte original de aula. O Cap. 4 do livro traz, para "Operações com arquivos", a lista de chamadas de sistema: Create (criar), Delete (apagar), Open (abrir), Close (fechar), Read (ler), Write (escrever), Append (anexar), Seek (procurar), Get/Set Attributes (obter/definir atributos), Rename (renomear).</li>
+</ul>
+<h3>Sistemas de diretórios hierárquicos</h3>
+<ul>
+<li>Estrutura: diretório raiz → diretório de usuário → subdiretórios de usuário (podem existir vários) → arquivos.</li>
+</ul>
+<h3>Alocação em disco</h3>
+<ul>
+<li><strong>Setor:</strong> menor unidade de informação endereçável — mesmo armazenando uma informação pequena, ela ocupa ao menos um setor; por isso, o tamanho de um arquivo em disco costuma ser maior que seu tamanho real.</li>
+<li><strong>Alocação contígua:</strong> todos os blocos do arquivo devem estar em ordem sequencial no disco.</li>
+<li><strong>Alocação por lista encadeada:</strong> o arquivo é dividido em várias partes espalhadas pelo HD, com a posição de cada uma registrada.</li>
+<li><strong>Index → I-node (index node):</strong> o livro (Cap. 4) confirma que essa é a referência — associa a cada arquivo uma estrutura de dados (I-node) que lista seus atributos e endereços; só precisa estar na memória enquanto o arquivo estiver aberto por um processo.</li>
+<li><strong>Alocação por lista encadeada usando tabela na memória (FAT):</strong> método citado no livro (Cap. 4) que não estava nas anotações de aula — armazena as informações dos arquivos numa tabela na memória (File Allocation Table), usada em SOs mais antigos como o MS-DOS.</li>
+<li><strong>MBR:</strong> esquema do sistema de arquivos que organiza como as partições estão dispostas.</li>
+</ul>
+<h3>Controle de caminho de arquivos</h3>
+<ul>
+<li>Um diretório/pasta é um arquivo que pode apontar para outras coisas; um arquivo normal não.</li>
+<li>Permissões <strong>rwx</strong> — leitura, escrita, execução.</li>
+<li>Arquivos compartilhados: cada usuário só pode... <em>(anotação incompleta na fonte original)</em>.</li>
+</ul>
+<hr />
+<h2 id="ex-escalonamento">Exercícios Resolvidos — Algoritmos de Escalonamento</h2>
+<h3>Exercício 1 — Processos A a I (sem tempo de chaveamento)</h3>
+<blockquote>
+<p>Considere os processos de A a I, com seus respectivos tempos e prioridades (5 = prioridade máxima, 1 = mínima). Calcule o tempo médio de ida e volta (tempo médio geral de retorno) para os algoritmos Circular, Escalonamento por Prioridades, FIFO (executado na ordem de A a I) e Tarefa mais curta primeiro. Ignore a sobrecarga de chaveamento de processos. Para o Circular, considere o sistema multiprogramado, com cada tarefa recebendo sua porção justa da CPU; para os demais, as tarefas são executadas uma por vez até finalizar. Em caso de empate no tempo ou na prioridade, desempata-se por ordem de chegada (A antes de B, B antes de C, e assim por diante).</p>
+</blockquote>
+<p><strong>Valores iniciais dos processos</strong></p>
+<table>
+<thead>
+<tr>
+<th>Processo</th>
+<th>Tempo</th>
+<th>Prioridade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>9</td>
+<td>3</td>
+</tr>
+<tr>
+<td>B</td>
+<td>2</td>
+<td>5</td>
+</tr>
+<tr>
+<td>C</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr>
+<td>D</td>
+<td>4</td>
+<td>4</td>
+</tr>
+<tr>
+<td>E</td>
+<td>6</td>
+<td>3</td>
+</tr>
+<tr>
+<td>F</td>
+<td>5</td>
+<td>2</td>
+</tr>
+<tr>
+<td>G</td>
+<td>7</td>
+<td>1</td>
+</tr>
+<tr>
+<td>H</td>
+<td>2</td>
+<td>1</td>
+</tr>
+<tr>
+<td>I</td>
+<td>4</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p><strong>FIFO (ordem de chegada)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Processo (ordem de execução)</th>
+<th>Tempo de retorno acumulado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>9</td>
+</tr>
+<tr>
+<td>B</td>
+<td>11</td>
+</tr>
+<tr>
+<td>C</td>
+<td>14</td>
+</tr>
+<tr>
+<td>D</td>
+<td>18</td>
+</tr>
+<tr>
+<td>E</td>
+<td>24</td>
+</tr>
+<tr>
+<td>F</td>
+<td>29</td>
+</tr>
+<tr>
+<td>G</td>
+<td>36</td>
+</tr>
+<tr>
+<td>H</td>
+<td>38</td>
+</tr>
+<tr>
+<td>I</td>
+<td>42</td>
+</tr>
+</tbody>
+</table>
+<p>Tempo médio: <strong>24,56</strong></p>
+<p><strong>Tarefa mais curta primeiro (SJF)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Processo (ordem de execução)</th>
+<th>Tempo de retorno acumulado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B</td>
+<td>2</td>
+</tr>
+<tr>
+<td>H</td>
+<td>4</td>
+</tr>
+<tr>
+<td>C</td>
+<td>7</td>
+</tr>
+<tr>
+<td>D</td>
+<td>11</td>
+</tr>
+<tr>
+<td>I</td>
+<td>15</td>
+</tr>
+<tr>
+<td>F</td>
+<td>20</td>
+</tr>
+<tr>
+<td>E</td>
+<td>26</td>
+</tr>
+<tr>
+<td>G</td>
+<td>33</td>
+</tr>
+<tr>
+<td>A</td>
+<td>42</td>
+</tr>
+</tbody>
+</table>
+<p>Tempo médio: <strong>17,78</strong></p>
+<p><strong>Escalonamento por prioridades</strong></p>
+<table>
+<thead>
+<tr>
+<th>Processo (ordem de execução)</th>
+<th>Tempo de retorno acumulado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B</td>
+<td>2</td>
+</tr>
+<tr>
+<td>D</td>
+<td>6</td>
+</tr>
+<tr>
+<td>A</td>
+<td>15</td>
+</tr>
+<tr>
+<td>C</td>
+<td>18</td>
+</tr>
+<tr>
+<td>E</td>
+<td>24</td>
+</tr>
+<tr>
+<td>F</td>
+<td>29</td>
+</tr>
+<tr>
+<td>I</td>
+<td>33</td>
+</tr>
+<tr>
+<td>G</td>
+<td>40</td>
+</tr>
+<tr>
+<td>H</td>
+<td>42</td>
+</tr>
+</tbody>
+</table>
+<p>Tempo médio: <strong>23,22</strong></p>
+<p><strong>Circular (round-robin)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Processo (ordem de execução)</th>
+<th>Tempo de retorno acumulado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>42</td>
+</tr>
+<tr>
+<td>B</td>
+<td>11</td>
+</tr>
+<tr>
+<td>C</td>
+<td>20</td>
+</tr>
+<tr>
+<td>D</td>
+<td>27</td>
+</tr>
+<tr>
+<td>E</td>
+<td>37</td>
+</tr>
+<tr>
+<td>F</td>
+<td>34</td>
+</tr>
+<tr>
+<td>G</td>
+<td>40</td>
+</tr>
+<tr>
+<td>H</td>
+<td>17</td>
+</tr>
+<tr>
+<td>I</td>
+<td>31</td>
+</tr>
+</tbody>
+</table>
+<p>Tempo médio: <strong>28,78</strong></p>
+<h3>Exercício 1 — variante com tempo de chaveamento (proposto, não resolvido no arquivo)</h3>
+<blockquote>
+<p>Mesmo conjunto de processos A a I. Calcule o tempo médio de ida e volta para Circular, Prioridades, FIFO e Tarefa mais curta primeiro, considerando 1 minuto de tempo de chaveamento entre processos. Calcule também o tempo de uso do processador pelos processos e o tempo usado em chaveamento, em porcentagem. As mesmas regras de desempate e de execução dos algoritmos do exercício anterior se aplicam.</p>
+</blockquote>
+<p><em>No arquivo original, as colunas de resultado desta variante (FIFO, SJF, Prioridades, Circular) estão em branco / com erro de fórmula (<code>#DIV/0!</code>) — ou seja, o exercício não chegou a ser resolvido na planilha enviada.</em></p>
+<h3>Exercício adicional — Processos A a E</h3>
+<table>
+<thead>
+<tr>
+<th>Processo</th>
+<th>Tempo</th>
+<th>Prioridade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>100</td>
+<td>3</td>
+</tr>
+<tr>
+<td>B</td>
+<td>60</td>
+<td>5</td>
+</tr>
+<tr>
+<td>C</td>
+<td>20</td>
+<td>2</td>
+</tr>
+<tr>
+<td>D</td>
+<td>40</td>
+<td>1</td>
+</tr>
+<tr>
+<td>E</td>
+<td>80</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>FIFO (ordem de chegada)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Processo (ordem de execução)</th>
+<th>Tempo de retorno acumulado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>100</td>
+</tr>
+<tr>
+<td>B</td>
+<td>160</td>
+</tr>
+<tr>
+<td>C</td>
+<td>180</td>
+</tr>
+<tr>
+<td>D</td>
+<td>220</td>
+</tr>
+<tr>
+<td>E</td>
+<td>300</td>
+</tr>
+</tbody>
+</table>
+<p>Tempo médio: <strong>192</strong></p>
+<p><strong>Tarefa mais curta primeiro (SJF)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Processo (ordem de execução)</th>
+<th>Tempo de retorno acumulado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C</td>
+<td>20</td>
+</tr>
+<tr>
+<td>D</td>
+<td>60</td>
+</tr>
+<tr>
+<td>B</td>
+<td>120</td>
+</tr>
+<tr>
+<td>E</td>
+<td>200</td>
+</tr>
+<tr>
+<td>A</td>
+<td>300</td>
+</tr>
+</tbody>
+</table>
+<p>Tempo médio: <strong>140</strong></p>
+<p><strong>Escalonamento por prioridades</strong></p>
+<table>
+<thead>
+<tr>
+<th>Processo (ordem de execução)</th>
+<th>Tempo de retorno acumulado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>B</td>
+<td>60</td>
+</tr>
+<tr>
+<td>E</td>
+<td>140</td>
+</tr>
+<tr>
+<td>A</td>
+<td>240</td>
+</tr>
+<tr>
+<td>C</td>
+<td>260</td>
+</tr>
+<tr>
+<td>D</td>
+<td>300</td>
+</tr>
+</tbody>
+</table>
+<p>Tempo médio: <strong>200</strong></p>
+<p><strong>Circular (round-robin)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Processo (ordem de execução)</th>
+<th>Tempo de retorno acumulado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A</td>
+<td>153</td>
+</tr>
+<tr>
+<td>B</td>
+<td>131</td>
+</tr>
+<tr>
+<td>C</td>
+<td>115</td>
+</tr>
+<tr>
+<td>D</td>
+<td>145</td>
+</tr>
+<tr>
+<td>E</td>
+<td>157</td>
+</tr>
+</tbody>
+</table>
+<p>Tempo médio: <strong>140,2</strong></p>
+<h3>Simulação adicional (sem enunciado no arquivo original)</h3>
+<p><em>A planilha contém ainda uma grade de contagem regressiva round-robin para 12 processos (A a L), sem enunciado escrito. Valores iniciais de tempo: A=3, B=4, C=5, D=5, E=6, F=9, G=7, H=6, I=3, J=4, K=9, L=8.</em></p>
+<h2 id="ex-produtor-consumidor">Exercícios Resolvidos — Produtor-Consumidor</h2>
+<h3>Exemplo 1 — Estado da memória compartilhada</h3>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Valor / Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Processos</td>
+<td>C = Consumidor, P = Produtor</td>
+</tr>
+<tr>
+<td>Em execução</td>
+<td>P</td>
+</tr>
+<tr>
+<td>Pronto</td>
+<td>C</td>
+</tr>
+<tr>
+<td>Chave</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Tempo</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Quantidade de espaços livres</td>
+<td>5</td>
+</tr>
+<tr>
+<td>Quantidade de espaços ocupados</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><em>Regra da simulação: muda-se a chave de 0 para 1 e de 1 para 0 quando o SO for escalonar os processos; o tempo varia de 0 a 5, produzindo ou consumindo a cada iteração de acordo com a chave (o tempo aumenta e depois diminui).</em></p>
+<h3>Exemplo 2 — Pseudocódigo produtor/consumidor</h3>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Valor / Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Processos</td>
+<td>C = Consumidor, P = Produtor</td>
+</tr>
+<tr>
+<td>Em execução</td>
+<td>P</td>
+</tr>
+<tr>
+<td>Pronto</td>
+<td>C</td>
+</tr>
+<tr>
+<td>Chave</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Tempo</td>
+<td>5</td>
+</tr>
+<tr>
+<td>Memória compartilhada</td>
+<td>DADO1, DADO2, DADO3, DADO4, DADO5</td>
+</tr>
+<tr>
+<td>Quantidade de espaços livres</td>
+<td>0</td>
+</tr>
+<tr>
+<td>Quantidade de espaços ocupados</td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+<pre><code>PRODUTOR
+while (TRUE) {
+  produz_item
+  if (ocupadas == n)
+    dorme
+  insere_item_MC
+  ocupadas++
+  if (ocupadas == 1)
+    wakeup(consumidor)
+}
+
+CONSUMIDOR
+while (TRUE) {
+  if (ocupadas == 0)
+    dorme
+  remove_item_MC
+  ocupadas--
+  if (ocupadas == (n - 1))
+    wakeup(produtor)
+}
+</code></pre>
+<hr />
+<h2 id="ex-deadlock">Exercícios Resolvidos — Deadlock (Algoritmo do Banqueiro)</h2>
+<h3>Exercício 1 (Planilha 1) — resolução passo a passo</h3>
+<p><strong>Estado inicial</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E (recursos existentes)</td>
+<td>4</td>
+<td>2</td>
+<td>3</td>
+<td>1</td>
+</tr>
+<tr>
+<td>A (recursos disponíveis)</td>
+<td>2</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de alocação atual (C):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de requisições (R):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>P1 não pode ser executado</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>P2 não pode ser executado</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>2</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>P3 pode ser executado</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ação:</strong> aloca recursos para P3 — atualiza C e R; P3 usa os recursos e libera — atualiza C.</p>
+<p><strong>Após a execução de P3</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E (recursos existentes)</td>
+<td>4</td>
+<td>2</td>
+<td>3</td>
+<td>1</td>
+</tr>
+<tr>
+<td>A (recursos disponíveis)</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de alocação atual (C):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de requisições (R):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>P1 não pode ser executado</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>P2 pode ser executado</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>P3 pode ser executado</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ação:</strong> aloca recursos para P2 — atualiza C e R; P2 usa os recursos e libera — atualiza C.</p>
+<p><strong>Após a execução de P2</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E (recursos existentes)</td>
+<td>4</td>
+<td>2</td>
+<td>3</td>
+<td>1</td>
+</tr>
+<tr>
+<td>A (recursos disponíveis)</td>
+<td>4</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de alocação atual (C):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de requisições (R):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>P1 pode ser executado</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>P2 pode ser executado</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>P3 pode ser executado</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ação:</strong> aloca recursos para P1 — atualiza C e R; P1 usa os recursos e libera — atualiza C.</p>
+<p><strong>✅ Não acontece deadlock no sistema.</strong></p>
+<p><strong>Estado final do sistema</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E (recursos existentes)</td>
+<td>4</td>
+<td>2</td>
+<td>3</td>
+<td>1</td>
+</tr>
+<tr>
+<td>A (recursos disponíveis)</td>
+<td>4</td>
+<td>2</td>
+<td>3</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de alocação atual (C):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de requisições (R):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>—</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>—</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3>Exercícios 1 a 3 (Planilha 2) — verificação de deadlock</h3>
+<p><strong>Exercício 1</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E (recursos existentes)</td>
+<td>4</td>
+<td>2</td>
+<td>3</td>
+<td>1</td>
+</tr>
+<tr>
+<td>A (recursos disponíveis)</td>
+<td>2</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de alocação atual (C):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de requisições (R):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>P1 não pode ser executado</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>P2 não pode ser executado</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>2</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>P3 não pode ser executado</td>
+</tr>
+</tbody>
+</table>
+<p><strong>❌ Deadlock.</strong></p>
+<p><strong>Exercício 2</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E (recursos existentes)</td>
+<td>3</td>
+<td>1</td>
+<td>2</td>
+<td>2</td>
+</tr>
+<tr>
+<td>A (recursos disponíveis)</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de alocação atual (C):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de requisições (R):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>P1 não pode ser executado</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>P2 não pode ser executado</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>P3 não pode ser executado</td>
+</tr>
+</tbody>
+</table>
+<p><strong>❌ Deadlock.</strong></p>
+<p><strong>Exercício 3</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E (recursos existentes)</td>
+<td>2</td>
+<td>1</td>
+<td>3</td>
+<td>2</td>
+</tr>
+<tr>
+<td>A (recursos disponíveis)</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de alocação atual (C):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>0</td>
+<td>1</td>
+<td>—</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de requisições (R):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>P1 não pode ser executado</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>P2 não pode ser executado</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>P3 não pode ser executado</td>
+</tr>
+</tbody>
+</table>
+<p><strong>❌ Deadlock.</strong></p>
+<h3>Exercícios 1 a 3 (Planilha 3) — resolução com passos</h3>
+<h4>Exercício 1</h4>
+<p><strong>Estado inicial</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E (recursos existentes)</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr>
+<td>A (recursos disponíveis)</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de alocação atual (C):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de requisições (R):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>P1 pode ser executado</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>2</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>P2 não pode ser executado</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>3</td>
+<td>0</td>
+<td>2</td>
+<td>1</td>
+<td>P3 não pode ser executado</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ação:</strong> aloca recursos para P1 — atualiza C e R; P1 usa os recursos e libera — atualiza C.</p>
+<p><strong>Após a execução de P1</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E (recursos existentes)</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+<td>3</td>
+</tr>
+<tr>
+<td>A (recursos disponíveis)</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de alocação atual (C):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de requisições (R):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>P1 pode ser executado</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>2</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>P2 não pode ser executado</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>3</td>
+<td>0</td>
+<td>2</td>
+<td>1</td>
+<td>P3 não pode ser executado</td>
+</tr>
+</tbody>
+</table>
+<p><strong>❌ Deadlock entre P2 e P3.</strong></p>
+<h4>Exercício 2</h4>
+<p><strong>Estado inicial</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E (recursos existentes)</td>
+<td>4</td>
+<td>2</td>
+<td>3</td>
+<td>2</td>
+</tr>
+<tr>
+<td>A (recursos disponíveis)</td>
+<td>4</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de alocação atual (C):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de requisições (R):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+<td>1</td>
+<td>P1 não pode ser executado</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>P2 pode ser executado</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>3</td>
+<td>1</td>
+<td>2</td>
+<td>1</td>
+<td>P3 não pode ser executado</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ação:</strong> aloca recursos para P2 — atualiza C e R; P2 usa os recursos e libera — atualiza C.</p>
+<p><strong>Após a execução de P2</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E (recursos existentes)</td>
+<td>4</td>
+<td>2</td>
+<td>3</td>
+<td>2</td>
+</tr>
+<tr>
+<td>A (recursos disponíveis)</td>
+<td>4</td>
+<td>1</td>
+<td>1</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de alocação atual (C):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de requisições (R):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>2</td>
+<td>1</td>
+<td>2</td>
+<td>1</td>
+<td>P1 não pode ser executado</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>P2 pode ser executado</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>3</td>
+<td>1</td>
+<td>2</td>
+<td>1</td>
+<td>P3 não pode ser executado</td>
+</tr>
+</tbody>
+</table>
+<p><strong>❌ Deadlock entre P1 e P3.</strong></p>
+<h4>Exercício 3</h4>
+<p><strong>Estado inicial</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E (recursos existentes)</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>1</td>
+</tr>
+<tr>
+<td>A (recursos disponíveis)</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de alocação atual (C):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de requisições (R):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>P1 não pode ser executado</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>0</td>
+<td>2</td>
+<td>0</td>
+<td>1</td>
+<td>P2 não pode ser executado</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>0</td>
+<td>1</td>
+<td>2</td>
+<td>0</td>
+<td>P3 pode ser executado</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ação:</strong> aloca recursos para P3 — atualiza C e R; P3 usa os recursos e libera — atualiza C.</p>
+<p><strong>Após a execução de P3</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>E (recursos existentes)</td>
+<td>2</td>
+<td>3</td>
+<td>4</td>
+<td>1</td>
+</tr>
+<tr>
+<td>A (recursos disponíveis)</td>
+<td>0</td>
+<td>2</td>
+<td>3</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de alocação atual (C):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>0</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><em>Matriz de requisições (R):</em></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>R</th>
+<th>S</th>
+<th>T</th>
+<th>U</th>
+<th>Situação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P1</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>P1 não pode ser executado</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>0</td>
+<td>2</td>
+<td>0</td>
+<td>1</td>
+<td>P2 não pode ser executado</td>
+</tr>
+<tr>
+<td>P3</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>P3 pode ser executado</td>
+</tr>
+</tbody>
+</table>
+<p><strong>❌ Deadlock entre P1 e P2.</strong></p>
+
+  </main>
+</div>
+</body>
+</html>
